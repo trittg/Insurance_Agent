@@ -33,7 +33,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     // const dialogflowAgentRef = db.collection('accounts').doc(account)
     //                            .collection('drivers').doc(String(agent.parameters.License));
 
-    agent.add(`Trying to add "{first-name}" `);
+    agent.add(`Trying to add "${firstName}" `);
     //Try to update the database with document {entry: "<value of database entry>"}
     /*
     return db.runTransaction(transaction => {
