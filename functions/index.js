@@ -53,7 +53,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       agent.add("What is the new drivers first and last name?")
       agent.add('--Going to name prompt!--');
       agent.setContext({
-        name: 'ad_name',
+        name: 'Name',
         lifespan: 1,
         parameters: agent.parameters
       });
@@ -62,7 +62,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       agent.add(`What is "${firstName}"s last name?`)
       agent.add('--Going to the last name prompt!--');
       agent.setContext({
-        name: 'ad_last-name',
+        name: 'LastName',
         lifespan: 1,
         parameters: agent.parameters
       });
@@ -77,7 +77,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     
     agent.add(`What is "${firstName}"s Date of Birth?`);
     agent.setContext({
-      name: 'ad_date-of-birth',
+      name: 'DateOfBirth',
       lifespan: 1,
       parameters: agent.parameters
     });
@@ -89,7 +89,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 
     agent.add(`What is "${firstName}"s Date of Birth?`);
     agent.setContext({
-      name: 'ad_date-of-birth',
+      name: 'DateOfBirth',
       lifespan: 1,
       parameters: agent.parameters
     });
@@ -163,9 +163,9 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
   intentMap.set('TR Add Driver', addDriver);
-  intentMap.set('TR AD Name', promptName);
-  intentMap.set('TR AD Last Name', promptLastName);
-  intentMap.set('TR AD Date of Birth', promptDOB);
+  intentMap.set('Name', promptName);
+  intentMap.set('LastName', promptLastName);
+  intentMap.set('DateOfBirth', promptDOB);
 
   agent.handleRequest(intentMap);
 });
