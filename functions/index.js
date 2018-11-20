@@ -53,7 +53,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       agent.add("What is the new drivers first and last name?")
       agent.add('--Going to name prompt!--');
       agent.setContext({
-        name: 'Name',
+        name: 'ad_name',
         lifespan: 1,
         parameters: agent.parameters
       });
@@ -62,7 +62,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       agent.add(`What is "${firstName}"s last name?`)
       agent.add('--Going to the last name prompt!--');
       agent.setContext({
-        name: 'LastName',
+        name: 'ad_last-name',
         lifespan: 1,
         parameters: agent.parameters
       });
@@ -77,7 +77,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     
     agent.add(`What is "${firstName}"s Date of Birth?`);
     agent.setContext({
-      name: 'DateOfBirth',
+      name: 'ad_date-of-birth',
       lifespan: 1,
       parameters: agent.parameters
     });
