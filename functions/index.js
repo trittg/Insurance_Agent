@@ -21,6 +21,16 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
   console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
 
+  let addDriverParam = {
+        firstName:"",
+        lastName:"",
+        DOB:"",
+        address:"",
+        licenseState:"",
+        yearsDriving:"",
+        relation:""
+  };
+
   function welcome(agent) {
     agent.add(`Hello! Welcome to The Hartford Insurance Chatbot`);
     agent.add(new Card({
@@ -45,15 +55,21 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   function addDriver(agent) {
     agent.add('Current Parameters');
     agent.add(`TEST: "${JSON.stringify(agent.parameters)}"`);
-    
-    var firstName = agent.parameters.First_Name;
+    addDriverParam.firstName = agent.parameters.firstName;
+    addDriverParam.relation = agent.parameters.relation;
+    var firstName = agent.parameters.firstName;      
 
+    agent.add(`Sure Thing! we can add a driver to your policy.`);
+    agent.add(`What is your drivers current address?`);
+
+
+    /*
     if (firstName === '') {
       agent.add(`Sure Thing! we can add a driver to your policy.`);
       agent.add("What is the new drivers first and last name?")
       agent.add('--Going to name prompt!--');
       agent.setContext({
-        name: 'ad_name',
+        name: 'AD Prompt Name',
         lifespan: 1,
         parameters: agent.parameters
       });
@@ -62,19 +78,51 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       agent.add(`What is "${firstName}"s last name?`)
       agent.add('--Going to the last name prompt!--');
       agent.setContext({
-        name: 'ad_last-name',
+        name: 'AD Prompt Last Name',
         lifespan: 1,
         parameters: agent.parameters
       });
     }
+    */
   }
 
-  function promptName(agent) {
+  function promptAddress() {
     agent.add('Current Parameters');
     agent.add(`TEST: "${JSON.stringify(agent.parameters)}"`);
 
-    var firstName = agent.parameters.First_Name;  
+    const address = agent.parameters.address;
+    const gotAddress = address.length > 0;
+
+    if (!gotAddress) {
+      agent.add("Please write the drivers current address...")
+    } else {
+      addDriverParam.address = agent.parameters.address;
+      agent.add('What state did you get your license from?');      
+    }
+  }
+
+
+
+
+
+
+
+
+  /*
+  function promptName(agent) {
+    agent.add('Current Parameters');
+    agent.add(`TEST: "${JSON.stringify(agent.parameters)}"`);
+    addDriverParam.firstName = agent.parameters.firstName;
+    addDriverParam.lastName = agent.parameters.lastName;
+
+    let firstName = agent.parameters.firstName;
+    let lastName = agent.parameters.lastName;
+
+
     
+    if (lastName == '') {
+      agent.add(`What is "${firstName}"s Date of Birth?`)
+    }
     agent.add(`What is "${firstName}"s Date of Birth?`);
     agent.setContext({
       name: 'ad_date-of-birth',
@@ -99,8 +147,18 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     agent.add('Current Parameters');
     agent.add(`TEST: "${JSON.stringify(agent.parameters)}"`);
 
+    let date = new Date(agent.parameters.birthdate);
+    agent.add(`Date: "${date}"`);
+
     agent.add(`Congrats you beat reached the end!... GO DO MORE WORK`);
+    gent.add(`Perfect. Next we need their address. Do you have that on you?`);
+    gent.add(`Great. Now I need their address, Can you provide it?`);
   }
+
+  function validateDOB(date) {
+    let currentDate = new Date();
+  }
+  */
 
 
   /*---Sample set context---
@@ -162,10 +220,18 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   // intentMap.set('<INTENT_NAME_HERE>', yourFunctionHandler);
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
-  intentMap.set('TR Add Driver', addDriver);
-  intentMap.set('Name', promptName);
+  intentMap.set('Add Driver', addDriver);
+  intentMap.set('AD Address', promptAddress);
+  
+  
+  
+  /*
+  
+  intentMap.set('AD Prompt Name', promptName);
+
   intentMap.set('LastName', promptLastName);
   intentMap.set('DateOfBirth', promptDOB);
+  */
 
   agent.handleRequest(intentMap);
 });
