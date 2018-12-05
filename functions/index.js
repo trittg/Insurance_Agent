@@ -101,7 +101,19 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
 
     agent.add(`Congrats you beat reached the end!... GO DO MORE WORK`);
   }
+  
+  function promptConfirmation(agent) {
+	agent.add('Current Parameters');
+	agent.add(` "${First_Name}, "${Last_Name}", who lives at "${address}", was born on "${birthday}, and has been driving "${duration}?"`);
+  
+	agent.setContext({
+		name: 'dataConfirmation'
+		lifespan: 1,
+		parameters: agent.parameters
+	});
+  }
 
+  //entities: name, place, date, duration.
 
   /*---Sample set context---
     agent.setContext({
@@ -166,6 +178,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   intentMap.set('Name', promptName);
   intentMap.set('LastName', promptLastName);
   intentMap.set('DateOfBirth', promptDOB);
+  intentMap.set('Relation', promptConfirmation);
 
   agent.handleRequest(intentMap);
 });
