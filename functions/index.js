@@ -8,10 +8,9 @@ const admin = require('firebase-admin');
 const { WebhookClient } = require('dialogflow-fulfillment');
 const { Text, Card, Image, Suggestion, Payload } = require('dialogflow-fulfillment');
 
-
-process.env.DEBUG = 'dialogflow:debug'; // enables lib debugging statements
+process.env.DEBUG = 'dialogflow:debug';
 admin.initializeApp();
-const db = admin.firestore();
+//const db = admin.firestore();
 
 const theHartfordAARPLogo_URL = 'https://s0.hfdstatic.com/sites/the_hartford/img/aarp_pl_logo.svg'
 const autoInsuranceProgram = 'https://www.thehartford.com/car-insurance/aarp'
@@ -36,84 +35,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     agent.add(new Suggestion(`Change address`));
   }
 
-
-  function fallback(agent) {
-    agent.add(`I didn't understand- CLOUD FUNCTION`);
-    agent.add(`I'm sorry, can you try again?- CLOUD FUNCTION`);
-  }
-
-  function addDriver(agent) {
-    agent.add('Current Parameters');
-    agent.add(`TEST: "${JSON.stringify(agent.parameters)}"`);
-    
-    var firstName = agent.parameters.First_Name;
-
-    if (firstName === '') {
-      agent.add(`Sure Thing! we can add a driver to your policy.`);
-      agent.add("What is the new drivers first and last name?")
-      agent.add('--Going to name prompt!--');
-      agent.setContext({
-        name: 'ad_name',
-        lifespan: 1,
-        parameters: agent.parameters
-      });
-    } else {
-      agent.add(`Sure Thing! we can add "${firstName}" to your policy.`);
-      agent.add(`What is "${firstName}"s last name?`)
-      agent.add('--Going to the last name prompt!--');
-      agent.setContext({
-        name: 'ad_last-name',
-        lifespan: 1,
-        parameters: agent.parameters
-      });
-    }
-  }
-
-  function promptName(agent) {
-    agent.add('Current Parameters');
-    agent.add(`TEST: "${JSON.stringify(agent.parameters)}"`);
-
-    var firstName = agent.parameters.First_Name;  
-    
-    agent.add(`What is "${firstName}"s Date of Birth?`);
-    agent.setContext({
-      name: 'ad_date-of-birth',
-      lifespan: 1,
-      parameters: agent.parameters
-    });
-  }
-
-  function promptLastName(agent) {
-    agent.add('Current Parameters');
-    agent.add(`TEST: "${JSON.stringify(agent.parameters)}"`);
-
-    agent.add(`What is "${firstName}"s Date of Birth?`);
-    agent.setContext({
-      name: 'DateOfBirth',
-      lifespan: 1,
-      parameters: agent.parameters
-    });
-  }
-
-  function promptDOB(agent) {
-    agent.add('Current Parameters');
-    agent.add(`TEST: "${JSON.stringify(agent.parameters)}"`);
-
-    agent.add(`Congrats you beat reached the end!... GO DO MORE WORK`);
-  }
-  
-  function promptConfirmation(agent) {
-	agent.add('Current Parameters');
-	agent.add(` "${First_Name}, "${Last_Name}", who lives at "${address}", was born on "${birthday}, and has been driving "${duration}?"`);
-  
-	agent.setContext({
-		name: 'dataConfirmation'
-		lifespan: 1,
-		parameters: agent.parameters
-	});
-  }
-
-  //entities: name, place, date, duration.
+  //Sample code
 
   /*---Sample set context---
     agent.setContext({
@@ -170,15 +92,10 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   */
 
   let intentMap = new Map();
+
   // Run the proper function handler based on the matched Dialogflow intent name
   // intentMap.set('<INTENT_NAME_HERE>', yourFunctionHandler);
   intentMap.set('Default Welcome Intent', welcome);
-  intentMap.set('Default Fallback Intent', fallback);
-  intentMap.set('TR Add Driver', addDriver);
-  intentMap.set('Name', promptName);
-  intentMap.set('LastName', promptLastName);
-  intentMap.set('DateOfBirth', promptDOB);
-  intentMap.set('Relation', promptConfirmation);
 
   agent.handleRequest(intentMap);
 });
